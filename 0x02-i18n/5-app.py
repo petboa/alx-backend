@@ -24,7 +24,7 @@ users = {
 }
 
 
-def get_user(login_as: str) -> Union[Dict, None]:
+def get_user(login_as) -> Union[Dict, None]:
     """Gets the user based on id """
     try:
         return users.get(int(login_as))
@@ -41,24 +41,16 @@ def before_request() -> None:
 @babel.localeselector
 def get_locale() -> str:
     """Gets locale from query string"""
-    locale = request.args.get("locale")
-    if locale:
-        return locale
-    user = request.args.get("login_as")
-    if user:
-        lang = users.get(int(user)).get('locale')
-        if lang in Config.LANGUAGES:
-            return lang
-    headers = request.headers.get("locale")
-    if headers:
-        return headers
+    loc = request.args.get("locale", "")
+    if loc in Config.LANGUAGES:
+        return loc
     return request.accept_languages.best_match(Config.LANGUAGES)
 
 
 @app.route("/")
 def Hello() -> str:
     """ Home page"""
-    return render_template("6-index.html")
+    return render_template("5-index.html")
 
 
 if __name__ == "__main__":
